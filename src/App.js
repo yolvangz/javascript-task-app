@@ -1,12 +1,11 @@
 window.addEventListener('load', () => {
-	const ui = new UI();
+	window.ui = new UI();
+	window.dataTask = new Data();
 	const container = document.getElementById('App');
-	const dataTask = new Task();
 
 	if (window.formAction !== undefined) {
-		ui.generateBody(window.formAction, container);
+		window.ui.generateBody(window.formAction, container);
 	} else {
-		ui.generateBody('create', container);
+		window.ui.generateBody('create', container);
 	}
-	console.log(new Task(0, 'una tarea', 'desc tarea'));
 });
