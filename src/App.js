@@ -4,8 +4,8 @@ window.addEventListener('load', () => {
 	const container = document.getElementById('App');
 
 	if (window.formAction !== undefined) {
-		window.ui.generateBody(window.formAction, container);
+		window.ui.printBody(window.formAction, container);
 	} else {
-		window.ui.generateBody('create', container);
+		window.ui.printBody('create', container);
 	}
 });

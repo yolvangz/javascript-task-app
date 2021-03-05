@@ -71,7 +71,7 @@ class UI extends HTML {
 	constructor () {
 		super();
 	}
-	// Generating DOM HTML methods
+	// Printing DOM HTML methods
 	// =================================
 	addTask (taskList, task = null) {
 		const element = document.createElement('tr');
@@ -97,14 +97,7 @@ class UI extends HTML {
 		}
 		taskList.appendChild(element);
 	}
-	deleteTask (targetTag) {
-		// Code to go up a level into de DOM until get the searched parent
-		while (targetTag.className !== 'task-row') {
-			targetTag = targetTag.parentElement;
-		}
-		targetTag.remove();
-	}
-	generateBody (action, targetTag) {
+	printBody (action, targetTag) {
 		targetTag.innerHTML = '';
 
 		const element = document.createElement('div');
@@ -112,11 +105,11 @@ class UI extends HTML {
 		element.innerHTML = this[action];
 		targetTag.appendChild(element);
 		if (action === 'create') {
-			this.generateTaskList();
+			this.printTaskList();
 		}
 		this.addDOMEvents();
 	}
-	generateTaskList () {
+	printTaskList () {
 		const list = document.getElementById('taskList');
 		list.innerHTML = '';
 		if (window.dataTask.data.length > 0) {
@@ -188,7 +181,7 @@ class UI extends HTML {
 					console.log(error);
 					return this.showMessage(`<strong>¡Ups!</strong>, ${error}`, 'danger');
 				}
-				this.generateTaskList();
+				this.printTaskList();
 			});
 		document.getElementById('taskList')
 			.addEventListener('click', (event) => {
@@ -201,7 +194,7 @@ class UI extends HTML {
 					if (buttonTag.name === 'delete') {	
 						let idTask = Number(buttonTag.dataset.idtask);
 						window.dataTask.deleteTask(idTask);
-						this.deleteTask(buttonTag);
+						this.printTaskList();
 						this.showMessage('¡Tarea eliminada <strong>Exitosamente</strong>!', 'success');
 					}
 
