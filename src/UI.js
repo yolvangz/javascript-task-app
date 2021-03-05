@@ -22,13 +22,13 @@ class HTML {
 			</aside>
 			<section class="col">
 				<div class="card">
-					<div class="card-body">
+					<div class="card-body  table-responsive-md">
 						<table class="table table-striped">
 							<thead>
-								<th>Title</th>
-								<th>Decription</th>
-								<th>Created At</th>
-								<th>Actions</th>
+								<th>Título</th>
+								<th>Descripción</th>
+								<th>Creado en</th>
+								<th>Acciones</th>
 							</thead>
 							<tbody id="taskList">
 							</tbody>
@@ -75,6 +75,7 @@ class UI extends HTML {
 	// =================================
 	addTask (taskList, task = null) {
 		const element = document.createElement('tr');
+		element.className = 'task-row';
 		if (task === null) {
 			element.innerHTML = `
 				<td colspan="4" class="text-center">¡Felicidades! No tienes tareas.</td>
@@ -85,10 +86,10 @@ class UI extends HTML {
 				<td>${task.description}</td>
 				<td>${this.formatDate(task.createdDate)}</td>
 				<td>
-					<button class="btn btn-secondary" name="update" title="Editar">
+					<button class="btn btn-secondary mb-1 taskAction" name="update" title="Editar" data-idtask="${task.id}">
 						<i class="bi bi-pencil-fill"></i>
 					</button>
-					<button class="btn btn-danger" name="delete" title="Eliminar">
+					<button class="btn btn-danger mb-1 taskAction" name="delete" title="Eliminar" data-idtask="${task.id}">
 						<i class="bi bi-trash"></i>
 					</button>
 				</td>
@@ -96,16 +97,13 @@ class UI extends HTML {
 		}
 		taskList.appendChild(element);
 	}
-	/*deleteTask (event) {
-		if (event.target.name === 'delete') {
-			let targetTag = event.target;
-			// Code to go up a level into de DOM until get the searched parent
-			while (targetTag.className !== '') {
-				targetTag = targetTag.parentElement;
-			}
-			targetTag.remove();
+	deleteTask (targetTag) {
+		// Code to go up a level into de DOM until get the searched parent
+		while (targetTag.className !== 'task-row') {
+			targetTag = targetTag.parentElement;
 		}
-	}*/
+		targetTag.remove();
+	}
 	generateBody (action, targetTag) {
 		targetTag.innerHTML = '';
 
@@ -192,10 +190,25 @@ class UI extends HTML {
 				}
 				this.generateTaskList();
 			});
-		/*document.getElementById('productList')
-			.addEventListener('click', (e) => {
-				this.deleteProduct(e);
-				this.showMessage('¡Tarea eliminada <strong>Exitosamente</strong>!', 'success');
-			});*/
+		document.getElementById('taskList')
+			.addEventListener('click', (event) => {
+				let buttonTag = event.target;
+				while (!buttonTag.name && buttonTag.id !== 'taskList') {
+					buttonTag = buttonTag.parentElement;
+				}
+				try {
+
+					if (buttonTag.name === 'delete') {	
+						let idTask = Number(buttonTag.dataset.idtask);
+						window.dataTask.deleteTask(idTask);
+						this.deleteTask(buttonTag);
+						this.showMessage('¡Tarea eliminada <strong>Exitosamente</strong>!', 'success');
+					}
+
+				} catch (error) {
+					console.log(error);
+					return this.showMessage(`<strong>¡Ups!</strong>, ${error}`, 'danger');	
+				}
+			});
 	}
 }
