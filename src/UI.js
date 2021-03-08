@@ -49,11 +49,11 @@ class HTML {
 						<form action="#" class="form" id="taskForm" data-type="update" data-idtask="">
 							<div class="form-group mt-3 mb-4">
 								<label for="taskName" class="form-label">Nombre de la tarea</label>
-								<input type="text" name="taskName" id="taskName" class="form-control" required>
+								<input type="text" name="taskName" id="taskName" class="form-control">
 							</div>
 							<div class="form-group mb-4">
 								<label for="taskDescription" class="form-label">Descripción</label>
-								<textarea name="taskDescription"rows="5" id="taskDescription" class="form-control" required></textarea>
+								<textarea name="taskDescription"rows="5" id="taskDescription" class="form-control"></textarea>
 							</div>
 							<button class="form-control btn btn-lg btn-success btn-block" name="update_task">Guardar tarea</button>
 						</form>
@@ -231,8 +231,8 @@ class UI extends HTML {
 
 
 						try {
-							if (task.name === '' || task.description === '') {
-								throw `Faltan datos para ${((form.dataset.type === 'create') ? 'crear' : 'modificar')} la tarea`;
+							if (task.name === '') {
+								throw `Es necesario un <strong>nombre</strong> para ${((form.dataset.type === 'create') ? 'crear' : 'modificar')} la tarea`;
 							}
 
 							switch (form.dataset.type) {
