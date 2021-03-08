@@ -11,9 +11,9 @@ class HTML {
 						<h2 class="h4 mb-4">Crea una nueva tarea:</h2>
 						<form action="#" class="form" id="taskForm" data-type="create">
 							<div class="form-group mb-3">
-								<input type="text" name="taskName" class="form-control" placeholder="Nombre de la tarea">
+								<input type="text" name="taskName" class="form-control" placeholder="Nombre de la tarea" maxlength="50">
 							</div>
-								<textarea name="taskDescription" class="form-control" rows="5" placeholder="¿De qué trata?"></textarea>
+								<textarea name="taskDescription" class="form-control" rows="5" placeholder="¿De qué trata?" maxlength="200"></textarea>
 							<div class="form-group mb-3"></div>
 							<button class="form-control btn btn-lg btn-success btn-block" name="save_task">Guardar tarea</button>
 						</form>
@@ -22,7 +22,7 @@ class HTML {
 			</aside>
 			<section class="col">
 				<div class="card">
-					<div class="card-body  table-responsive-md">
+					<div class="card-body table-responsive">
 						<table class="table table-striped">
 							<thead>
 								<th>Título</th>
@@ -49,11 +49,11 @@ class HTML {
 						<form action="#" class="form" id="taskForm" data-type="update" data-idtask="">
 							<div class="form-group mt-3 mb-4">
 								<label for="taskName" class="form-label">Nombre de la tarea</label>
-								<input type="text" name="taskName" id="taskName" class="form-control">
+								<input type="text" name="taskName" id="taskName" class="form-control" maxlength="50">
 							</div>
 							<div class="form-group mb-4">
 								<label for="taskDescription" class="form-label">Descripción</label>
-								<textarea name="taskDescription"rows="5" id="taskDescription" class="form-control"></textarea>
+								<textarea name="taskDescription"rows="5" id="taskDescription" class="form-control" maxlength="200"></textarea>
 							</div>
 							<button class="form-control btn btn-lg btn-success btn-block" name="update_task">Guardar tarea</button>
 						</form>
@@ -143,7 +143,7 @@ class UI extends HTML {
 		} else {
 			element.innerHTML = `
 				<td>${task.name}</td>
-				<td>${task.description}</td>
+				<td class="text-break">${task.description}</td>
 				<td>${this.formatDate(task.createdDate)}</td>
 				<td>
 					<button class="btn btn-secondary mb-1 taskAction" name="update" title="Editar" data-idtask="${task.id}">
