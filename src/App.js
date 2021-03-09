@@ -13,13 +13,16 @@ class App {
 		});
 		window.ui.print({
 			element: 'form',
-			container: document.querySelector('.form-container')
+			container: document.querySelector('.form-container'),
+			data: window.dataTask,
 		});
 		window.ui.print({
 			element: 'list',
-			container: document.querySelector('.list-container')
+			container: document.querySelector('.list-container'),
+			data: window.dataTask
 		});
-		window.ui.form.eventListener(window.ui);
+		window.ui.form.eventListener(window.ui, this, window.dataTask);
+		window.ui.list.eventListener(window.ui, this);
 	}
 	printUpdateUI (idTask) {
 		this.getModules(idTask);
@@ -30,8 +33,10 @@ class App {
 		});
 		window.ui.print({
 			element: 'form',
-			container: document.querySelector('.form-container')
+			container: document.querySelector('.form-container'),
+			data: window.dataTask,
 		});
+		window.ui.form.eventListener(window.ui, this, window.dataTask);
 	}
 }
 
@@ -39,7 +44,6 @@ window.addEventListener('load', () => {
 	try{
 		const app = new App();
 		app.printCreateUI();
-		window.ui.form.eventListener(window.ui);
 	} catch (error) {
 		console.error(error);
 	}

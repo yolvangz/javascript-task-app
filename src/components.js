@@ -16,6 +16,12 @@ export class UI {
 				case 'message':
 					this.message.print(options.container, options.text, options.type);
 				break;
+				case 'list':
+					this[options.element].print(options.container, options.data);
+				break;
+				case 'form':
+					this[options.element].print(options.container, options.data);
+				break;
 				default:
 					this[options.element].print(options.container);
 			}

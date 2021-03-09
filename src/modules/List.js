@@ -1,5 +1,5 @@
 export class List {
-	print (container) {
+	print (container, data) {
 		const row = new Row();
 		container.innerHTML = `
 			<div class="card">
@@ -18,8 +18,8 @@ export class List {
 			</div>
 		`;
 		const taskList = document.getElementById('taskList');
-		if (window.dataTask.data.length > 0) {
-			window.dataTask.data.forEach((task, index) => {
+		if (data.data.length > 0) {
+			data.data.forEach((task, index) => {
 				row.print(taskList, task, index);
 			});
 		} else {
@@ -28,6 +28,11 @@ export class List {
 	}
 	getDOM () {
 		return document.getElementById('taskList');
+	}
+	eventListener(ui, app) {
+		this.getDOM()
+			.addEventListener('click', (event) => {
+			});
 	}
 }
 class Row {

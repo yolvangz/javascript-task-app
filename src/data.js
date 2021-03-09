@@ -13,33 +13,50 @@ export class Data {
 		})
 	}
 	addTask (task) {
-		let newTask = new Task(task, this.lastId);
-		let newID = this.lastId + 1;
-		
-		let newData = this.data;
-		newData.push(newTask);
+		try {
+			let newTask = new Task(task, this.lastId);
+			let newID = this.lastId + 1;
+			
+			let newData = this.data;
+			newData.push(newTask);
 
-		this.sendData(newData, newID);
+			this.sendData(newData, newID);
+			return true;
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
 	}
 	deleteTask (id) {
-		let newData = this.data.filter((task) => {return task.id !== id;});
-		this.sendData(newData);
+		try {
+			let newData = this.data.filter((task) => {return task.id !== id;});
+			this.sendData(newData);
+			return true;
+		} catch (e) {
+			console.error(e);
+			return false;
+		}
 	}
-	updateTask(task) {
-		console.log(task)
-		if (typeof task.id === 'number' && !isNaN(task.id)) {
-			const updatedTask = new Task(task, task.id);
-			let updatedData = this.data;
-			const taskIndex = updatedData.findIndex((i) => {return i.id === task.id});
-			
-			if (taskIndex > -1) {
-				updatedData[taskIndex] = updatedTask;
-				this.sendData(updatedData);
+	updateTask (task) {
+		try {
+			if (typeof task.id === 'number' && !isNaN(task.id)) {
+				const updatedTask = new Task(task, task.id);
+				let updatedData = this.data;
+				const taskIndex = updatedData.findIndex((i) => {return i.id === task.id});
+				
+				if (taskIndex > -1) {
+					updatedData[taskIndex] = updatedTask;
+					this.sendData(updatedData);
+					return true;
+				} else {
+					throw `Sorry, id does not match to any existent task`;
+				}
 			} else {
-				throw `Sorry, id does not match to any existent task`;
+				throw `ERROR: id is '${typeof id}'`;
 			}
-		} else {
-			throw `ERROR: id is '${typeof id}'`;
+		} catch (e) {
+			console.error(e);
+			return false;
 		}
 	}
 	getData () {
