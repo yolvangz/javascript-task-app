@@ -46,6 +46,7 @@ class Form {
 }
 class List {
 	print (container) {
+		const row = new Row();
 		container.innerHTML = `
 			<div class="card">
 				<div class="card-body table-responsive">
@@ -62,42 +63,71 @@ class List {
 				</div>
 			</div>
 		`;
-		const taskList = container.getElementById('taskList');
+		const taskList = document.getElementById('taskList');
 		if (window.dataTask.data.length > 0) {
-			window.dataTask.data.forEach((task) => {
-				this.printTask(taskList, task);
+			window.dataTask.data.forEach((task, index) => {
+				row.print(taskList, task, index);
 			});
 		} else {
-			this.printTask(taskList);
+			row.print(taskList);
 		}
 	}
-	printTask (container, task = null) {
+}
+class Row {
+	print (container, task = null, index) {
+		const actions = {
+			update: new ActionButton('update'),
+			delete: new ActionButton('delete'),
+		}
 		const element = document.createElement('tr');
 		element.className = 'task-row';
 		if (task === null) {
 			element.innerHTML = `
 				<td colspan="4" class="text-center">¡Felicidades! No tienes tareas.</td>
 			`;
+			container.appendChild(element);
 		} else {
 			element.innerHTML = `
 				<td>${task.name}</td>
 				<td class="text-break">${task.description}</td>
 				<td style="white-space: nowrap">${this.formatDate(task.createdDate)}</td>
-				<td>
-					<button class="btn btn-secondary mb-1 taskAction" name="update" title="Editar" data-idtask="${task.id}">
-						<i class="bi bi-pencil-fill"></i>
-					</button>
-					<button class="btn btn-danger mb-1 taskAction" name="delete" title="Eliminar" data-idtask="${task.id}">
-						<i class="bi bi-trash"></i>
-					</button>
+				<td class="actions-${index}">
 				</td>
 			`;
+			container.appendChild(element);
+			const actionsContainer = querySelector(`.actions-${index}`);
+			for (button in actions) {
+				actions[button].print(actionsContainer, task.id);
+			}
 		}
-		container.appendChild(element);
 	}
 	formatDate (timestamp) {
 		const date = new Date(timestamp);
 		return `${date.getFullYear()}-${(date.getMonth())+1}-${date.getDate()}`;
+	}
+}
+class ActionButton {
+	constructor (type) {
+		this.type = type;
+	}
+	print (container, id) {
+		const element = document.createElement('button');
+		element.dataset.idtask = id;
+		switch (this.type) {
+			case 'update':
+				element.className = 'btn btn-secondary mb-1 taskAction';
+				element.name='update';
+				element.title='Editar';
+				element.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+			break;
+			case 'delete':
+				element.className = 'btn btn-danger mb-1 taskAction';
+				element.name='delete';
+				element.title='Eliminar';
+				element.innerHTML = '<i class="bi bi-trash"></i>';
+			break;
+		}
+		container.appendChild(element);
 	}
 }
 class BsAlert {
@@ -127,14 +157,10 @@ class BsAlert {
 // Body COmponent
 class Body {
 	constructor (type, idTask) {
-		this.idTask = idTask;
-		if (typeof idTask === 'number' && isNaN(idTask)) {
-			this.form = new Form(type, idTask);
-		} else {
-			this.form = new Form(type);
+		this.type = type
+		if (typeof idTask === 'number') {
+			this.idTask = idTask;
 		}
-		this.list = new List();
-		this.message = new BsAlert()
 	}
 	print (container) {
 		container.innerHTML = '';
@@ -153,7 +179,6 @@ class Body {
 					</section>
 				`;
 				container.appendChild(element);
-				this.list.print();
 			break;
 			case 'update':
 				element.innerHTML= `
@@ -168,12 +193,30 @@ class Body {
 			break;
 		}
 
-
-		this.form.print(document.querySelector('.form-container'));
-
 		if (window.message) {
 			this.message(window.message.message, window.message.type);
 		}
-		ui.addDOMEvents(action);
+	}
+}
+
+class UI {
+	constructor (idTask) {
+		this.form = (typeof idTask === 'number' && isNaN(idTask)) ? new Form('update', idTask) : new Form('create');
+		this.body = (typeof idTask === 'number' && isNaN(idTask)) ? new Body('update', idTask) : new Body('create');
+		this.list = new List();
+		this.message = new BsAlert();
+	}
+	print(options = {}) {
+		if (options.element !== undefined && options.container !== undefined) {
+			switch (options.element) {
+				case 'message':
+					this.message.print(options.container, options.text, options.type);
+				break;
+				default:
+					this[options.element].print(options.container);
+			}
+		} else {
+			throw 'Sorry, options are uncompleted';
+		}
 	}
 }
