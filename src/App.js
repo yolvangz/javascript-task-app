@@ -38,6 +38,16 @@ class App {
 		});
 		window.ui.form.eventListener(window.ui, this, window.dataTask);
 	}
+	printDeleteUI (idTask) {
+		this.getModules(idTask);
+
+		window.ui.print({
+			element: 'dialog',
+			container: document.getElementById('dialogBox'),
+			data: window.dataTask,
+		})
+		window.ui.dialog.eventListener(window.ui, this, window.dataTask);
+	}
 }
 
 window.addEventListener('load', () => {
