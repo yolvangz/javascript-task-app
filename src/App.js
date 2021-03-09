@@ -41,12 +41,33 @@ class App {
 	printDeleteUI (idTask) {
 		this.getModules(idTask);
 
-		window.ui.print({
-			element: 'dialog',
-			container: document.getElementById('dialogBox'),
-			data: window.dataTask,
-		})
-		window.ui.dialog.eventListener(window.ui, this, window.dataTask);
+		try{
+			if (window.dataTask.deleteTask(idTask)) {
+				window.ui.print({
+					element: 'list',
+					container: document.querySelector('.list-container'),
+					data: window.dataTask,
+				});
+
+				window.ui.list.eventListener(window.ui, this);
+					window.ui.print({
+						element: 'message',
+						container: document.getElementById('messageBox'),
+						type: 'success',
+						text: '¡Tarea eliminada <strong>Exitosamente</strong>!',
+					});
+			} else {
+				throw 'Sorry, Task could not be deleted.'
+			}
+		} catch (error) {
+			console.error(error);
+			window.ui.print({
+				element: 'message',
+				container: document.getElementById('messageBox'),
+				type: 'danger',
+				text: error,
+			});
+		}
 	}
 }
 

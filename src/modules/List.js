@@ -105,13 +105,13 @@ class ActionButton {
 		element.dataset.idtask = id;
 		switch (this.type) {
 			case 'update':
-				element.className = 'btn btn-secondary mb-1 taskAction';
+				element.className = 'btn btn-secondary mb-1 mr-1 taskAction';
 				element.name='update';
 				element.title='Editar';
 				element.innerHTML = '<i class="bi bi-pencil-fill"></i>';
 			break;
 			case 'delete':
-				element.className = 'btn btn-danger mb-1 taskAction';
+				element.className = 'btn btn-danger mb-1 mr-1 taskAction';
 				element.name='delete';
 				element.title='Eliminar';
 				element.innerHTML = '<i class="bi bi-trash"></i>';
