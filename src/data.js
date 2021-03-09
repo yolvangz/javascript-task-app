@@ -1,4 +1,4 @@
-class Data {
+export class Data {
 	constructor () {
 		if(!localStorage.getItem('taskList')) {
 			localStorage.setItem('taskList', '[]');
