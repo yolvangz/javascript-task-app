@@ -43,6 +43,66 @@ class Form {
 	resetForm (event) {
 		event.target.reset();
 	}
+	getDOM () {
+		return document.getElementById('taskForm');
+	}
+	getDOMTask (container = document) {
+		return {
+			form: container.querySelector('#taskForm'),
+			name: container.querySelector('.form-control[name=taskName]'),
+			description: container.querySelector('.form-control[name=taskDescription]'),
+		};
+	}
+	getFormValues (task) {
+		return {
+			id: (task.form.dataset.idtask) ? task.form.dataset.idtask : undefined,
+			name: task.name.value,
+			description: task.description.value,
+		}
+	}
+	eventListener (ui) {
+		this.getDOM()
+			.addEventListener('submit', (event) => {
+				event.preventDefault();
+				
+				try {
+					const form = event.target;
+					let task = this.getFormValues(this.getDOMTask());
+
+					if (task.name === '') {
+						throw `Es necesario un <strong>nombre</strong> para '${form.dataset.type}' la tarea`;	
+					}
+					switch (form.dataset.type) {
+						case 'create':
+							ui.print({
+								element: 'message',
+								container: document.getElementById('messageBox'),
+								text: 'Tarea creada <strong>exitosamente</strong>',
+								type: 'success'
+							})
+						break;
+						case 'update':
+							ui.print({
+								element: 'message',
+								container: document.getElementById('messageBox'),
+								text: 'Tarea modificada <strong>exitosamente</strong>',
+								type: 'success'
+							})
+						break;
+						default:
+							throw `ERROR: unknown form type '${form.dataset.type}'`;
+					}
+				} catch (error) {
+					console.error(error);
+					ui.print({
+						element: 'message',
+						container: document.getElementById('messageBox'),
+						text: error,
+						type: 'danger'
+					})
+				}
+			});
+	}
 }
 class List {
 	print (container) {
@@ -71,6 +131,9 @@ class List {
 		} else {
 			row.print(taskList);
 		}
+	}
+	getDOM () {
+		return document.getElementById('taskList');
 	}
 }
 class Row {
@@ -144,11 +207,12 @@ class BsAlert {
 		container.appendChild(element);
 
 		setTimeout(() => {
-			let alert = new bootstrap.Alert(document.querySelector('.alert'));
-			if (alert !== undefined) {
+			try{
+				let alert = new bootstrap.Alert(document.querySelector('.alert'));
 				alert.close();
-			} else {
-				document.querySelector('.alert').remove;
+			} catch (error) {
+				document.querySelector('.alert').remove();
+				console.error(error);
 			}
 		}, 3000);
 	}
@@ -201,12 +265,12 @@ class Body {
 
 class UI {
 	constructor (idTask) {
-		this.form = (typeof idTask === 'number' && isNaN(idTask)) ? new Form('update', idTask) : new Form('create');
-		this.body = (typeof idTask === 'number' && isNaN(idTask)) ? new Body('update', idTask) : new Body('create');
+		this.form = (typeof idTask === 'number' && !isNaN(idTask)) ? new Form('update', idTask) : new Form('create');
+		this.body = (typeof idTask === 'number' && !isNaN(idTask)) ? new Body('update', idTask) : new Body('create');
 		this.list = new List();
 		this.message = new BsAlert();
 	}
-	print(options = {}) {
+	print (options = {}) {
 		if (options.element !== undefined && options.container !== undefined) {
 			switch (options.element) {
 				case 'message':

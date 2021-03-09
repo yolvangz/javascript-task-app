@@ -17,6 +17,7 @@ class App {
 			element: 'list',
 			container: document.querySelector('.list-container')
 		});
+		window.ui.form.eventListener(window.ui);
 	}
 	printUpdateUI (idTask) {
 		this.getModules(idTask);
@@ -36,6 +37,7 @@ window.addEventListener('load', () => {
 	try{
 		const app = new App();
 		app.printCreateUI();
+		window.ui.form.eventListener(window.ui);
 	} catch (error) {
 		console.error(error);
 	}
