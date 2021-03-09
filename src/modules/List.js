@@ -29,9 +29,37 @@ export class List {
 	getDOM () {
 		return document.getElementById('taskList');
 	}
-	eventListener(ui, app) {
+	eventListener (ui, app) {
 		this.getDOM()
 			.addEventListener('click', (event) => {
+				let buttonTag = event.target;
+				while (buttonTag.name === undefined && buttonTag.id !== 'taskList') {
+					buttonTag = buttonTag.parentElement;
+				}
+				if (buttonTag.id === 'taskList') {
+					return;
+				}
+				try {
+					let idTask = Number(buttonTag.dataset.idtask);
+					switch (buttonTag.name) {
+						case 'update':
+							app.printUpdateUI(idTask);
+						break;
+						case 'delete':
+							app.printDeleteUI(idTask);
+						break;
+						default:
+							throw 'ERROR: Unknown button action';
+					}
+				} catch (error) {
+					console.error(error);
+					ui.print({
+						element: 'message',
+						container: document.getElementById('messageBox'),
+						type: 'danger',
+						text: error,
+					});
+				}
 			});
 	}
 }
@@ -77,13 +105,13 @@ class ActionButton {
 		element.dataset.idtask = id;
 		switch (this.type) {
 			case 'update':
-				element.className = 'btn btn-secondary mb-1 taskAction';
+				element.className = 'btn btn-secondary mb-1 mr-1 taskAction';
 				element.name='update';
 				element.title='Editar';
 				element.innerHTML = '<i class="bi bi-pencil-fill"></i>';
 			break;
 			case 'delete':
-				element.className = 'btn btn-danger mb-1 taskAction';
+				element.className = 'btn btn-danger mb-1 mr-1 taskAction';
 				element.name='delete';
 				element.title='Eliminar';
 				element.innerHTML = '<i class="bi bi-trash"></i>';

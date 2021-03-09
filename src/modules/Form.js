@@ -95,6 +95,7 @@ export class Form {
 									container: document.querySelector('.list-container'),
 									data: data
 								});
+								ui.list.eventListener(ui, app);
 							}
 						break;
 						case 'update':
@@ -109,7 +110,6 @@ export class Form {
 									text: 'Tarea modificada <strong>exitosamente</strong>',
 									type: 'success'
 								});
-
 							}
 						break;
 						default:

@@ -38,6 +38,37 @@ class App {
 		});
 		window.ui.form.eventListener(window.ui, this, window.dataTask);
 	}
+	printDeleteUI (idTask) {
+		this.getModules(idTask);
+
+		try{
+			if (window.dataTask.deleteTask(idTask)) {
+				window.ui.print({
+					element: 'list',
+					container: document.querySelector('.list-container'),
+					data: window.dataTask,
+				});
+
+				window.ui.list.eventListener(window.ui, this);
+					window.ui.print({
+						element: 'message',
+						container: document.getElementById('messageBox'),
+						type: 'success',
+						text: '¡Tarea eliminada <strong>Exitosamente</strong>!',
+					});
+			} else {
+				throw 'Sorry, Task could not be deleted.'
+			}
+		} catch (error) {
+			console.error(error);
+			window.ui.print({
+				element: 'message',
+				container: document.getElementById('messageBox'),
+				type: 'danger',
+				text: error,
+			});
+		}
+	}
 }
 
 window.addEventListener('load', () => {
