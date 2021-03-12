@@ -68,7 +68,7 @@ export class Form {
 			description: task.description.value,
 		}
 	}
-	eventListener (ui, app, data) {
+	eventListener (app) {
 		this.getDOM()
 			.addEventListener('submit', (event) => {
 				event.preventDefault();
@@ -82,29 +82,29 @@ export class Form {
 					}
 					switch (form.dataset.type) {
 						case 'create':
-							if (data.addTask(sentTask)) {
+							if (app.data.addTask(sentTask)) {
 								this.resetForm(event);
-								ui.print({
+								app.ui.print({
 									element: 'message',
 									container: document.getElementById('messageBox'),
 									text: 'Tarea creada <strong>exitosamente</strong>',
 									type: 'success'
 								});
-								ui.print({
+								app.ui.print({
 									element: 'list',
 									container: document.querySelector('.list-container'),
-									data: data
+									data: app.data,
 								});
-								ui.list.eventListener(ui, app);
+								app.ui.list.eventListener(app);
 							}
 						break;
 						case 'update':
 							if (typeof sentTask.id !== 'number' || isNaN(sentTask.id)) {
 								throw "ERROR: Wrong id";
 							}
-							if (data.updateTask(sentTask)) {
+							if (app.data.updateTask(sentTask)) {
 								app.printCreateUI();
-								ui.print({
+								app.ui.print({
 									element: 'message',
 									container: document.getElementById('messageBox'),
 									text: 'Tarea modificada <strong>exitosamente</strong>',
@@ -117,7 +117,7 @@ export class Form {
 					}
 				} catch (error) {
 					console.error(error);
-					ui.print({
+					app.ui.print({
 						element: 'message',
 						container: document.getElementById('messageBox'),
 						text: error,

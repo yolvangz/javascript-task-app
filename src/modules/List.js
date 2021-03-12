@@ -29,7 +29,7 @@ export class List {
 	getDOM () {
 		return document.getElementById('taskList');
 	}
-	eventListener (ui, app) {
+	eventListener (app) {
 		this.getDOM()
 			.addEventListener('click', (event) => {
 				let buttonTag = event.target;
@@ -53,7 +53,7 @@ export class List {
 					}
 				} catch (error) {
 					console.error(error);
-					ui.print({
+					app.ui.print({
 						element: 'message',
 						container: document.getElementById('messageBox'),
 						type: 'danger',

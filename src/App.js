@@ -2,7 +2,7 @@ import {UI} from './components.js';
 import {Data} from './data.js';
 class App {
 	constructor (idTask) {
-		this.dataTask = new Data();
+		this.data = new Data();
 		this.getUI(idTask);
 	}
 	getUI (idTask) {
@@ -17,15 +17,15 @@ class App {
 		this.ui.print({
 			element: 'form',
 			container: document.querySelector('.form-container'),
-			data: this.dataTask,
+			data: this.data,
 		});
 		this.ui.print({
 			element: 'list',
 			container: document.querySelector('.list-container'),
-			data: this.dataTask
+			data: this.data,
 		});
-		this.ui.form.eventListener(this.ui, this, this.dataTask);
-		this.ui.list.eventListener(this.ui, this);
+		this.ui.form.eventListener(this);
+		this.ui.list.eventListener(this);
 	}
 	printUpdateUI (idTask) {
 		this.getUI(idTask);
@@ -37,28 +37,27 @@ class App {
 		this.ui.print({
 			element: 'form',
 			container: document.querySelector('.form-container'),
-			data: this.dataTask,
+			data: this.data,
 		});
-		this.ui.form.eventListener(this.ui, this, this.dataTask);
+		this.ui.form.eventListener(this);
 	}
 	printDeleteUI (idTask) {
 		this.getUI(idTask);
 
 		try{
-			if (this.dataTask.deleteTask(idTask)) {
+			if (this.data.deleteTask(idTask)) {
 				this.ui.print({
 					element: 'list',
 					container: document.querySelector('.list-container'),
-					data: this.dataTask,
+					data: this.data,
 				});
-
-				this.ui.list.eventListener(this.ui, this);
-					this.ui.print({
-						element: 'message',
-						container: document.getElementById('messageBox'),
-						type: 'success',
-						text: '¡Tarea eliminada <strong>Exitosamente</strong>!',
-					});
+				this.ui.list.eventListener(this);
+				this.ui.print({
+					element: 'message',
+					container: document.getElementById('messageBox'),
+					type: 'success',
+					text: '¡Tarea eliminada <strong>Exitosamente</strong>!',
+				});
 			} else {
 				throw 'Sorry, Task could not be deleted.'
 			}
