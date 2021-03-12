@@ -1,56 +1,59 @@
 import {UI} from './components.js';
 import {Data} from './data.js';
 class App {
-	getModules (idTask) {
-		window.ui = new UI(idTask);
-		window.dataTask = new Data();
+	constructor (idTask) {
+		this.dataTask = new Data();
+		this.getUI(idTask);
+	}
+	getUI (idTask) {
+		this.ui = new UI(idTask);
 	}
 	printCreateUI () {
-		this.getModules();
-		window.ui.print({
+		this.getUI();
+		this.ui.print({
 			element: 'body',
 			container: document.getElementById('App')
 		});
-		window.ui.print({
+		this.ui.print({
 			element: 'form',
 			container: document.querySelector('.form-container'),
-			data: window.dataTask,
+			data: this.dataTask,
 		});
-		window.ui.print({
+		this.ui.print({
 			element: 'list',
 			container: document.querySelector('.list-container'),
-			data: window.dataTask
+			data: this.dataTask
 		});
-		window.ui.form.eventListener(window.ui, this, window.dataTask);
-		window.ui.list.eventListener(window.ui, this);
+		this.ui.form.eventListener(this.ui, this, this.dataTask);
+		this.ui.list.eventListener(this.ui, this);
 	}
 	printUpdateUI (idTask) {
-		this.getModules(idTask);
+		this.getUI(idTask);
 		
-		window.ui.print({
+		this.ui.print({
 			element: 'body',
 			container: document.getElementById('App')
 		});
-		window.ui.print({
+		this.ui.print({
 			element: 'form',
 			container: document.querySelector('.form-container'),
-			data: window.dataTask,
+			data: this.dataTask,
 		});
-		window.ui.form.eventListener(window.ui, this, window.dataTask);
+		this.ui.form.eventListener(this.ui, this, this.dataTask);
 	}
 	printDeleteUI (idTask) {
-		this.getModules(idTask);
+		this.getUI(idTask);
 
 		try{
-			if (window.dataTask.deleteTask(idTask)) {
-				window.ui.print({
+			if (this.dataTask.deleteTask(idTask)) {
+				this.ui.print({
 					element: 'list',
 					container: document.querySelector('.list-container'),
-					data: window.dataTask,
+					data: this.dataTask,
 				});
 
-				window.ui.list.eventListener(window.ui, this);
-					window.ui.print({
+				this.ui.list.eventListener(this.ui, this);
+					this.ui.print({
 						element: 'message',
 						container: document.getElementById('messageBox'),
 						type: 'success',
@@ -61,7 +64,7 @@ class App {
 			}
 		} catch (error) {
 			console.error(error);
-			window.ui.print({
+			this.ui.print({
 				element: 'message',
 				container: document.getElementById('messageBox'),
 				type: 'danger',
