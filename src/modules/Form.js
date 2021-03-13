@@ -68,62 +68,61 @@ export class Form {
 			description: task.description.value,
 		}
 	}
-	eventListener (ui, app, data) {
-		this.getDOM()
-			.addEventListener('submit', (event) => {
-				event.preventDefault();
-				
-				try {
-					const form = event.target;
-					let sentTask = this.getFormValues(this.getDOMTask());
+	eventListener (app) {
+		this.getDOM().addEventListener('submit', (event) => {
+			event.preventDefault();
+			
+			try {
+				const form = event.target;
+				let sentTask = this.getFormValues(this.getDOMTask());
 
-					if (sentTask.name === '') {
-						throw `Es necesario un <strong>nombre</strong> para '${form.dataset.type}' la tarea`;	
-					}
-					switch (form.dataset.type) {
-						case 'create':
-							if (data.addTask(sentTask)) {
-								this.resetForm(event);
-								ui.print({
-									element: 'message',
-									container: document.getElementById('messageBox'),
-									text: 'Tarea creada <strong>exitosamente</strong>',
-									type: 'success'
-								});
-								ui.print({
-									element: 'list',
-									container: document.querySelector('.list-container'),
-									data: data
-								});
-								ui.list.eventListener(ui, app);
-							}
-						break;
-						case 'update':
-							if (typeof sentTask.id !== 'number' || isNaN(sentTask.id)) {
-								throw "ERROR: Wrong id";
-							}
-							if (data.updateTask(sentTask)) {
-								app.printCreateUI();
-								ui.print({
-									element: 'message',
-									container: document.getElementById('messageBox'),
-									text: 'Tarea modificada <strong>exitosamente</strong>',
-									type: 'success'
-								});
-							}
-						break;
-						default:
-							throw `ERROR: unknown form type '${form.dataset.type}'`;
-					}
-				} catch (error) {
-					console.error(error);
-					ui.print({
-						element: 'message',
-						container: document.getElementById('messageBox'),
-						text: error,
-						type: 'danger'
-					})
+				if (sentTask.name === '') {
+					throw `Es necesario un <strong>nombre</strong> para '${form.dataset.type}' la tarea`;	
 				}
-			});
+				switch (form.dataset.type) {
+					case 'create':
+						if (app.data.addTask(sentTask)) {
+							this.resetForm(event);
+							app.ui.print({
+								element: 'message',
+								container: document.getElementById('messageBox'),
+								text: 'Tarea creada <strong>exitosamente</strong>',
+								type: 'success'
+							});
+							app.ui.print({
+								element: 'list',
+								container: document.querySelector('.list-container'),
+								data: app.data,
+							});
+							app.ui.list.eventListener(app);
+						}
+					break;
+					case 'update':
+						if (typeof sentTask.id !== 'number' || isNaN(sentTask.id)) {
+							throw "ERROR: Wrong id";
+						}
+						if (app.data.updateTask(sentTask)) {
+							app.printCreateUI();
+							app.ui.print({
+								element: 'message',
+								container: document.getElementById('messageBox'),
+								text: 'Tarea modificada <strong>exitosamente</strong>',
+								type: 'success'
+							});
+						}
+					break;
+					default:
+						throw `ERROR: unknown form type '${form.dataset.type}'`;
+				}
+			} catch (error) {
+				console.error(error);
+				app.ui.print({
+					element: 'message',
+					container: document.getElementById('messageBox'),
+					text: error,
+					type: 'danger'
+				})
+			}
+		});
 	}
 }

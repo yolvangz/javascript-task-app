@@ -35,9 +35,5 @@ export class Body {
 				container.appendChild(element);
 			break;
 		}
-
-		if (window.message) {
-			this.message(window.message.message, window.message.type);
-		}
 	}
 }
